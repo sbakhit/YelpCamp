@@ -2,6 +2,9 @@ const express    = require('express'),
       app        = express();
       bodyParser = require('body-parser'),
       mongoose   = require('mongoose'),
+      Campground = require('./models/campground'),
+      Comment = require('./models/comment'),
+      seedDB     = require('./models/seeds'),
       PORT       = 3000;
 
 // app setup
@@ -16,22 +19,7 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true});
 
-// schema setup
-const campgroundSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
-const Campground = mongoose.model("Campground", campgroundSchema);
-
-// var campgrounds_date = require('./data/campgrounds');
-// Campground.create(campgrounds_date[0], (err, campground) => {
-//     if(err) {
-//         console.log(`Error:\n${err}`);
-//     } else {
-//         console.log(`Success:\n${campground}`);
-//     }
-// });
+seedDB();
 
 // routes
 app.get("/", (req, res) => {
@@ -72,8 +60,7 @@ app.get("/campgrounds/new", (req, res) => {
 
 //SHOW - show more info about campground with id
 app.get("/campgrounds/:id", (req, res) => {
-    const id = req.params.id;
-    Campground.findById(id, (err, campground) => {
+    Campground.findById(req.params.id).populate("comments").exec((err, campground) => {
         if(err) {
             console.log(`Error:\n${err}`);
         } else {
