@@ -20,6 +20,9 @@
                     <p>
                         <em>Submitted By <%= campground.author.username %></em>
                     </p>
+                    <% if(currentUser && campground.author.id.equals(currentUser._id)) { %>
+                        <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
+                    <% } %>
                 </div>
             </div>
             <div class="well">
@@ -33,6 +36,9 @@
                             <strong><%= comment.author.username %></strong>
                             <span class="pull-right">10 days ago</span>
                             <p><%= comment.text %></p>
+                            <% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
+                                <a class="btn btn-warning btn-xs" href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit">Edit</a>
+                            <% } %>
                         </div>
                     </div>
                 <% }); %>
