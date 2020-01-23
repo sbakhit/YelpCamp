@@ -33,7 +33,6 @@ router.get("/new", isLoggedIn, (req, res) => {
         if(err) {
             console.log(`Error:\n${err}`);
         } else {
-            console.log(campground);
             res.status(200).render("comments/new", {campground});
         }
     });
