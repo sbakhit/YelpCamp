@@ -43,7 +43,7 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true});
 
-seedDB();
+// seedDB(); // seed database
 
 // routes
 app.use("/", indexRoutes);

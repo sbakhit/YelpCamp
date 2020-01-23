@@ -10,6 +10,10 @@ router.post("/", isLoggedIn, (req, res) => {
             console.log(`Error:\n${err}`);
             res.redirect("/campgrounds");
         } else {
+            req.body.comment.author = {
+                id: req.user._id,
+                username: req.user.username
+            };
             Comment.create(req.body.comment, (err, comment) => {
                 if(err) {
                     console.log(`Error:\n${err}`);
@@ -29,6 +33,7 @@ router.get("/new", isLoggedIn, (req, res) => {
         if(err) {
             console.log(`Error:\n${err}`);
         } else {
+            console.log(campground);
             res.status(200).render("comments/new", {campground});
         }
     });

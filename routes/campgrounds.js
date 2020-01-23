@@ -1,5 +1,4 @@
 const Campground = require('../models/campground'),
-      User       = require('../models/user'),
       express    = require('express'),
       router     = express.Router();
 
@@ -16,21 +15,15 @@ router.get("/", (req, res) => {
 
 //CREATE - add campgrounds to DB
 router.post("/", isLoggedIn, (req, res) => {
-    User.findById(req.user._id, (err, user) => {
+    req.body.campground.author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    Campground.create(req.body.campground, (err, campground) => {
         if(err) {
             console.log(`Error:\n${err}`);
-            res.redirect("/campgrounds");
         } else {
-            Campground.create(req.body.campground, (err, campground) => {
-                if(err) {
-                    console.log(`Error:\n${err}`);
-                } else {
-                    user.campgrounds.push(campground);
-                    user.save();
-                    res.status(200).redirect("/campgrounds");
-                    // res.status(200).redirect(`/campgrounds/${campground._id}`);
-                }
-            });
+            res.status(200).redirect("/campgrounds");
         }
     });
 });
