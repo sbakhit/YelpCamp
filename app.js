@@ -9,7 +9,7 @@ const express               = require('express'),
       User                  = require('./models/user'),
       Campground            = require('./models/campground'),
       Comment               = require('./models/comment'),
-      seedDB                = require('./models/seeds'),
+      seedDB                = require('./seeds'),
       PORT                  = 3000;
 
 const commentRoutes    = require('./routes/comments'),
