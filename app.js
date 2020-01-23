@@ -58,18 +58,28 @@ app.get("/campgrounds", (req, res) => {
 });
 
 //CREATE - add campgrounds to DB
-app.post("/campgrounds", (req, res) => {
-    Campground.create(req.body.campground, (err, campground) => {
+app.post("/campgrounds", isLoggedIn, (req, res) => {
+    User.findById(req.user._id, (err, user) => {
         if(err) {
             console.log(`Error:\n${err}`);
+            res.redirect("/campgrounds");
         } else {
-            res.status(200).redirect("/campgrounds");
+            Campground.create(req.body.campground, (err, campground) => {
+                if(err) {
+                    console.log(`Error:\n${err}`);
+                } else {
+                    user.campgrounds.push(campground);
+                    user.save();
+                    res.status(200).redirect("/campgrounds");
+                    // res.status(200).redirect(`/campgrounds/${campground._id}`);
+                }
+            });
         }
     });
 });
 
 //NEW - show form to create new campgrounds
-app.get("/campgrounds/new", (req, res) => {
+app.get("/campgrounds/new", isLoggedIn, (req, res) => {
     res.status(200).render("campgrounds/new");
 });
 
