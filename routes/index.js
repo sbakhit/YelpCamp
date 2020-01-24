@@ -5,23 +5,24 @@ const passport = require('passport'),
 
 // root route
 router.get("/", (req, res) => {
-    res.status(200).render("landing");
+    res.render("landing");
 });
 
 //NEW - show form to register new user
 router.get("/register", (req, res) => {
-    res.status(200).render("register");
+    res.render("register");
 });
 
 //CREATE - add new user
 router.post("/register", (req, res) => {
     const newUser = new User({username: req.body.username});
     User.register(newUser, req.body.password, (err, user) => {
-        if(err) {
-            console.log(`Error:\n${err}`);
-            res.render("register");
+        if(err || !user) {
+            req.flash("error", err.message);
+            res.redirect("back");
         } else {
             passport.authenticate("local")(req, res, () => {
+                req.flash("success", `${user.username} registered`);
                 res.redirect("/campgrounds");
             });
         }
@@ -30,7 +31,7 @@ router.post("/register", (req, res) => {
 
 //NEW - show form to login as user
 router.get("/login", (req, res) => {
-    res.status(200).render("login");
+    res.render("login");
 });
 
 //CREATE - login
@@ -43,7 +44,8 @@ router.post("/login", passport.authenticate("local", {
 // logout
 router.get("/logout", (req, res) => {
     req.logout();
-    res.status(200).redirect("/campgrounds");
+    req.flash("success", "Logged you out!");
+    res.redirect("/campgrounds");
 });
 
 module.exports = router;

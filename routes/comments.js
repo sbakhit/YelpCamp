@@ -7,8 +7,9 @@ const Campground = require('../models/campground'),
 //CREATE - add comment to campground
 router.post("/", middleware.isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
-        if(err) {
-            console.log(`Error:\n${err}`);
+        if(err || !campground) {
+            console.log(err);
+            req.flash("error", "Error retrieving campground");
             res.redirect("/campgrounds");
         } else {
             req.body.comment.author = {
@@ -16,13 +17,15 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
                 username: req.user.username
             };
             Comment.create(req.body.comment, (err, comment) => {
-                if(err) {
-                    console.log(`Error:\n${err}`);
+                if(err || !comment) {
+                    console.log(err);
+                    req.flash("error", "Error creating comment");
                 } else {
                     campground.comments.push(comment);
                     campground.save();
-                    res.redirect(`/campgrounds/${campground._id}`);
+                    req.flash("success", "comment is created");
                 }
+                res.redirect(`/campgrounds/${campground._id}`);
             });
         }
     });
@@ -31,8 +34,10 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
 //NEW - show form to create new comment to campground
 router.get("/new", middleware.isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
-        if(err) {
-            console.log(`Error:\n${err}`);
+        if(err || !campground) {
+            console.log(err);
+            req.flash("error", "Error retrieving campground");
+            res.redirect("/campgrounds");
         } else {
             res.render("comments/new", {campground});
         }
@@ -49,6 +54,7 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, (req, res) => 
 //UPDATE - edit comment
 router.put("/:comment_id", middleware.checkCommentOwnership, (req, res) => {
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, () => {
+        req.flash("success", "comment is updated");
         res.redirect(`/campgrounds/${req.params.id}`);
     });
 });
@@ -57,7 +63,7 @@ router.put("/:comment_id", middleware.checkCommentOwnership, (req, res) => {
 router.delete("/:comment_id", middleware.checkCommentOwnership, (req, res) => {
     Comment.findById(req.params.comment_id, (err, comment) => {
         comment.remove();
-        // req.flash("success", `Campground ${campground.name} delete`);
+        req.flash("success", "comment is deleted");
         res.redirect(`/campgrounds/${req.params.id}`);
     });
 });
