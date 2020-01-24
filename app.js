@@ -1,15 +1,12 @@
 const express               = require('express'),
-      app                   = express();
+      app                   = express(),
       bodyParser            = require('body-parser'),
       mongoose              = require('mongoose'),
       passport              = require('passport'),
       LocalStrategy         = require('passport-local'),
       methodOverride        = require('method-override'),
-      passportLocalMongoose = require('passport-local-mongoose'),
       User                  = require('./models/user'),
-      Campground            = require('./models/campground'),
-      Comment               = require('./models/comment'),
-      seedDB                = require('./seeds'),
+    //   seedDB                = require('./seeds'),
       PORT                  = 3000;
 
 const commentRoutes    = require('./routes/comments'),
