@@ -6,9 +6,9 @@ const express               = require('express'),
       passport              = require('passport'),
       LocalStrategy         = require('passport-local'),
       methodOverride        = require('method-override'),
-      User                  = require('./models/user'),
+      User                  = require('./models/user');
     //   seedDB                = require('./seeds'),
-      PORT                  = 3000;
+    //   PORT                  = 3000;
 
 const commentRoutes    = require('./routes/comments'),
       campgroundRoutes = require('./routes/campgrounds'),
@@ -53,6 +53,6 @@ app.use("/", indexRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Server is up on port ${PORT}.`);
+app.listen(process.env.PORT, process.env.IP, () => {
+    console.log("Server is running");
 });
