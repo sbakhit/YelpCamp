@@ -6,9 +6,11 @@ const express               = require('express'),
       passport              = require('passport'),
       LocalStrategy         = require('passport-local'),
       methodOverride        = require('method-override'),
-      User                  = require('./models/user');
+      User                  = require('./models/user'),
     //   seedDB                = require('./seeds'),
-    //   PORT                  = 3000;
+      PORT                  = process.env.PORT || 3000,
+      IP                    = process.env.IP || '127.0.0.1',
+      DBURL                 = process.env.MONGODB_URI || 'mongodb://localhost:27017/yelp_camp';
 
 const commentRoutes    = require('./routes/comments'),
       campgroundRoutes = require('./routes/campgrounds'),
@@ -44,7 +46,7 @@ passport.deserializeUser(User.deserializeUser());
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
+mongoose.connect(DBURL, {useNewUrlParser: true});
 // seedDB(); // seed database
 
 // routes
@@ -52,6 +54,6 @@ app.use("/", indexRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
-app.listen(process.env.PORT, process.env.IP, () => {
-    console.log("Server is running");
+app.listen(PORT, IP, () => {
+    console.log("Server is running on port", PORT);
 });
