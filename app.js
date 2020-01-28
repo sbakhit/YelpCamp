@@ -55,5 +55,5 @@ app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
 app.listen(PORT, IP, () => {
-    console.log("Server is running on port", PORT);
+    console.log(`Server is running: ${IP}:${PORT}`);
 });
