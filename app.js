@@ -8,8 +8,7 @@ const express               = require('express'),
       methodOverride        = require('method-override'),
       User                  = require('./models/user'),
     //   seedDB                = require('./seeds'),
-    //   PORT                  = process.env.PORT || 3000,
-    //   IP                    = process.env.IP || '127.0.0.1',
+      PORT                  = process.env.PORT || 3000,
       DBURL                 = process.env.MONGODB_URI || 'mongodb://localhost:27017/yelp_camp';
 
 const commentRoutes    = require('./routes/comments'),
@@ -54,6 +53,6 @@ app.use("/", indexRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
-app.listen(process.env.PORT, process.env.IP, () => {
-    console.log(`Server is running: ${process.env.IP}:${process.env.PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
