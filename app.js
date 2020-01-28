@@ -44,8 +44,7 @@ passport.deserializeUser(User.deserializeUser());
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect('mongodb://localhost:27017/yelp_camp', {useNewUrlParser: true});
-
+mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
 // seedDB(); // seed database
 
 // routes
